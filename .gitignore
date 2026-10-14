@@ -1,0 +1,8 @@
+node_modules/
+out/
+*.vsix
+
+# Test config and files downloaded while testing the extension in this folder
+.ftpconfig
+.ftpignore
+var/

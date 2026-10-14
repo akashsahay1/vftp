@@ -1,0 +1,395 @@
+{
+  "name": "vftp",
+  "displayName": "Remote FTP",
+  "description": "Browse and edit files on FTP, FTPS and SFTP servers from a sidebar, configured per project with a .ftpconfig file.",
+  "version": "0.1.0",
+  "publisher": "akash",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akashsahay1/vftp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/akashsahay1/vftp/issues"
+  },
+  "homepage": "https://github.com/akashsahay1/vftp#readme",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "ftp",
+    "ftps",
+    "sftp",
+    "remote",
+    "upload"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "workspaceContains:.ftpconfig"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "remoteFtp",
+          "title": "Remote FTP",
+          "icon": "media/remote-ftp.svg"
+        }
+      ]
+    },
+    "views": {
+      "remoteFtp": [
+        {
+          "id": "remoteFtp.explorer",
+          "name": "Remote"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "remoteFtp.explorer",
+        "contents": "Open a folder to use Remote FTP.\n[Open Folder](command:vscode.openFolder)",
+        "when": "workspaceFolderCount == 0"
+      },
+      {
+        "view": "remoteFtp.explorer",
+        "contents": "No .ftpconfig file found in this project.\n[Create FTP Config File](command:remoteFtp.createFtpConfig)\n[Create SFTP Config File](command:remoteFtp.createSftpConfig)",
+        "when": "workspaceFolderCount > 0 && !remoteFtp.hasConfig"
+      },
+      {
+        "view": "remoteFtp.explorer",
+        "contents": "[Connect](command:remoteFtp.connect)\n[Edit Config File](command:remoteFtp.editConfig)\n[Create Ignore File](command:remoteFtp.createIgnoreFile)",
+        "when": "remoteFtp.hasConfig && !remoteFtp.connected && !remoteFtp.connecting"
+      },
+      {
+        "view": "remoteFtp.explorer",
+        "contents": "Connecting…",
+        "when": "remoteFtp.connecting"
+      }
+    ],
+    "commands": [
+      {
+        "command": "remoteFtp.toggle",
+        "title": "Toggle Sidebar",
+        "category": "Remote FTP"
+      },
+      {
+        "command": "remoteFtp.createFtpConfig",
+        "title": "Create FTP Config File",
+        "category": "Remote FTP"
+      },
+      {
+        "command": "remoteFtp.createSftpConfig",
+        "title": "Create SFTP Config File",
+        "category": "Remote FTP"
+      },
+      {
+        "command": "remoteFtp.createIgnoreFile",
+        "title": "Create Ignore File",
+        "category": "Remote FTP"
+      },
+      {
+        "command": "remoteFtp.editConfig",
+        "title": "Edit Config File",
+        "category": "Remote FTP",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "remoteFtp.connect",
+        "title": "Connect",
+        "category": "Remote FTP",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "remoteFtp.disconnect",
+        "title": "Disconnect",
+        "category": "Remote FTP",
+        "icon": "$(debug-disconnect)"
+      },
+      {
+        "command": "remoteFtp.refresh",
+        "title": "Refresh",
+        "category": "Remote FTP",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "remoteFtp.addFile",
+        "title": "Add File",
+        "category": "Remote FTP",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "remoteFtp.addFolder",
+        "title": "Add Folder",
+        "category": "Remote FTP",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "remoteFtp.rename",
+        "title": "Rename",
+        "category": "Remote FTP"
+      },
+      {
+        "command": "remoteFtp.delete",
+        "title": "Delete",
+        "category": "Remote FTP"
+      },
+      {
+        "command": "remoteFtp.download",
+        "title": "Download",
+        "category": "Remote FTP"
+      },
+      {
+        "command": "remoteFtp.openFile",
+        "title": "Open",
+        "category": "Remote FTP"
+      },
+      {
+        "command": "remoteFtp.upload",
+        "title": "Upload",
+        "category": "Remote FTP",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "remoteFtp.downloadLocal",
+        "title": "Download from Remote",
+        "category": "Remote FTP"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "remoteFtp.connect",
+          "when": "view == remoteFtp.explorer && remoteFtp.hasConfig && !remoteFtp.connected && !remoteFtp.connecting",
+          "group": "navigation@1"
+        },
+        {
+          "command": "remoteFtp.addFile",
+          "when": "view == remoteFtp.explorer && remoteFtp.connected",
+          "group": "navigation@1"
+        },
+        {
+          "command": "remoteFtp.addFolder",
+          "when": "view == remoteFtp.explorer && remoteFtp.connected",
+          "group": "navigation@2"
+        },
+        {
+          "command": "remoteFtp.refresh",
+          "when": "view == remoteFtp.explorer && remoteFtp.connected",
+          "group": "navigation@3"
+        },
+        {
+          "command": "remoteFtp.disconnect",
+          "when": "view == remoteFtp.explorer && remoteFtp.connected",
+          "group": "navigation@4"
+        },
+        {
+          "command": "remoteFtp.editConfig",
+          "when": "view == remoteFtp.explorer && remoteFtp.hasConfig",
+          "group": "1_config@1"
+        },
+        {
+          "command": "remoteFtp.createIgnoreFile",
+          "when": "view == remoteFtp.explorer && workspaceFolderCount > 0",
+          "group": "1_config@2"
+        },
+        {
+          "command": "remoteFtp.createFtpConfig",
+          "when": "view == remoteFtp.explorer && workspaceFolderCount > 0",
+          "group": "2_create@1"
+        },
+        {
+          "command": "remoteFtp.createSftpConfig",
+          "when": "view == remoteFtp.explorer && workspaceFolderCount > 0",
+          "group": "2_create@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "remoteFtp.addFile",
+          "when": "view == remoteFtp.explorer && !listMultiSelection",
+          "group": "1_new@1"
+        },
+        {
+          "command": "remoteFtp.addFolder",
+          "when": "view == remoteFtp.explorer && !listMultiSelection",
+          "group": "1_new@2"
+        },
+        {
+          "command": "remoteFtp.refresh",
+          "when": "view == remoteFtp.explorer",
+          "group": "2_refresh@1"
+        },
+        {
+          "command": "remoteFtp.rename",
+          "when": "view == remoteFtp.explorer && viewItem != rftpRoot && !listMultiSelection",
+          "group": "3_edit@1"
+        },
+        {
+          "command": "remoteFtp.delete",
+          "when": "view == remoteFtp.explorer && viewItem != rftpRoot",
+          "group": "3_edit@2"
+        },
+        {
+          "command": "remoteFtp.download",
+          "when": "view == remoteFtp.explorer",
+          "group": "4_transfer@1"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "remoteFtp.upload",
+          "when": "remoteFtp.hasConfig",
+          "group": "remoteFtp@1"
+        },
+        {
+          "command": "remoteFtp.downloadLocal",
+          "when": "remoteFtp.hasConfig",
+          "group": "remoteFtp@2"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "remoteFtp.upload",
+          "when": "remoteFtp.hasConfig && resourceScheme == file",
+          "group": "remoteFtp@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "remoteFtp.refresh",
+          "when": "remoteFtp.connected"
+        },
+        {
+          "command": "remoteFtp.addFile",
+          "when": "remoteFtp.connected"
+        },
+        {
+          "command": "remoteFtp.addFolder",
+          "when": "remoteFtp.connected"
+        },
+        {
+          "command": "remoteFtp.rename",
+          "when": "false"
+        },
+        {
+          "command": "remoteFtp.delete",
+          "when": "false"
+        },
+        {
+          "command": "remoteFtp.download",
+          "when": "false"
+        },
+        {
+          "command": "remoteFtp.openFile",
+          "when": "false"
+        },
+        {
+          "command": "remoteFtp.downloadLocal",
+          "when": "false"
+        },
+        {
+          "command": "remoteFtp.connect",
+          "when": "remoteFtp.hasConfig && !remoteFtp.connected"
+        },
+        {
+          "command": "remoteFtp.disconnect",
+          "when": "remoteFtp.connected"
+        },
+        {
+          "command": "remoteFtp.upload",
+          "when": "remoteFtp.hasConfig"
+        },
+        {
+          "command": "remoteFtp.editConfig",
+          "when": "remoteFtp.hasConfig"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "remoteFtp.toggle",
+        "key": "ctrl+alt+o"
+      },
+      {
+        "command": "remoteFtp.connect",
+        "key": "ctrl+alt+c",
+        "when": "remoteFtp.hasConfig && !remoteFtp.connected"
+      },
+      {
+        "command": "remoteFtp.disconnect",
+        "key": "ctrl+alt+d",
+        "when": "remoteFtp.connected"
+      },
+      {
+        "command": "remoteFtp.upload",
+        "key": "ctrl+shift+u",
+        "mac": "cmd+shift+u",
+        "when": "remoteFtp.hasConfig && (editorTextFocus || filesExplorerFocus)"
+      },
+      {
+        "command": "remoteFtp.delete",
+        "key": "delete",
+        "mac": "cmd+backspace",
+        "when": "focusedView == remoteFtp.explorer && remoteFtp.connected && !inputFocus"
+      }
+    ],
+    "configuration": {
+      "title": "Remote FTP",
+      "properties": {
+        "remoteFtp.autoUploadOnSave": {
+          "type": "string",
+          "enum": [
+            "always",
+            "onlyWhenConnected",
+            "never"
+          ],
+          "enumDescriptions": [
+            "Upload on save, connecting first if needed.",
+            "Upload on save only while connected.",
+            "Never upload on save."
+          ],
+          "default": "always",
+          "description": "Upload a project file to the server when it is saved."
+        },
+        "remoteFtp.connectOnStartup": {
+          "type": "boolean",
+          "default": false,
+          "description": "Connect automatically when a project with a .ftpconfig file is opened."
+        },
+        "remoteFtp.showHiddenFiles": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show remote files and folders whose names start with a dot."
+        },
+        "remoteFtp.hideIgnoredFiles": {
+          "type": "boolean",
+          "default": true,
+          "description": "Hide remote entries matched by .ftpignore in the Remote view."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run compile",
+    "package": "vsce package --skip-license"
+  },
+  "dependencies": {
+    "basic-ftp": "^5.0.5",
+    "ignore": "^5.3.2",
+    "jsonc-parser": "^3.3.1",
+    "ssh2": "^1.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/ssh2": "^1.15.0",
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^3.2.0",
+    "typescript": "^5.5.0"
+  }
+}

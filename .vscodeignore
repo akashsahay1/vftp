@@ -1,0 +1,8 @@
+# Package only the extension itself. Anything else in this folder (test .ftpconfig,
+# downloaded server files, old .vsix builds) must never end up in the package.
+**
+!package.json
+!README.md
+!media/**
+!out/**/*.js
+!node_modules/**
