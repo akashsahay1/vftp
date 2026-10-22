@@ -3,6 +3,7 @@
 **
 !package.json
 !README.md
+!LICENSE
 !media/**
 !out/**/*.js
 !node_modules/**

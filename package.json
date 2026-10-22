@@ -3,7 +3,7 @@
   "displayName": "Remote FTP",
   "description": "Browse and edit files on FTP, FTPS and SFTP servers from a sidebar, configured per project with a .ftpconfig file.",
   "version": "0.1.0",
-  "publisher": "akash",
+  "publisher": "akashsahay",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -377,7 +377,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "vscode:prepublish": "npm run compile",
-    "package": "vsce package --skip-license"
+    "package": "vsce package"
   },
   "dependencies": {
     "basic-ftp": "^5.0.5",
