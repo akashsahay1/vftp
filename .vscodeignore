@@ -3,6 +3,7 @@
 **
 !package.json
 !README.md
+!CHANGELOG.md
 !LICENSE
 !media/**
 !out/**/*.js

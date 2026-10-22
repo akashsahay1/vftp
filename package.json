@@ -2,9 +2,14 @@
   "name": "vftp",
   "displayName": "Remote FTP",
   "description": "Browse and edit files on FTP, FTPS and SFTP servers from a sidebar, configured per project with a .ftpconfig file.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "akashsahay",
   "license": "MIT",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#1A3FA8",
+    "theme": "dark"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/akashsahay1/vftp.git"
